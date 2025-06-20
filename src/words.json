@@ -1,0 +1,5 @@
+{
+  "easy": ["cat", "dog", "bat", "pen", "sun", "cup", "box", "run", "red", "hat", "car", "fan", "map", "cow", "bus"],
+  "medium": ["purple", "grape", "banana", "house", "train", "water", "phone", "plant", "bottle", "table", "mouse", "cloud", "glass", "light", "knife"],
+  "hard": ["typescript", "functionality", "synchronization", "environment", "architecture", "development", "performance", "transformation", "computation", "communication", "configuration", "accessibility", "representation", "authorization", "implementation"]
+}
