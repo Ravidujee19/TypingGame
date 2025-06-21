@@ -5,6 +5,7 @@ const scoreDisplay = document.getElementById("score") as HTMLSpanElement;
 const restartBtn = document.getElementById("restart-btn") as HTMLButtonElement;
 const startBtn = document.getElementById("start-btn") as HTMLButtonElement;
 const difficultySelect = document.getElementById("difficulty") as HTMLSelectElement;
+const highScoreDisplay = document.getElementById("high-score") as HTMLSpanElement;
 
 let wordList: string[] = [];
 let shuffledWords: string[] = [];
@@ -13,6 +14,7 @@ let currentWord = '';
 let score = 0;
 let time = 10;
 let timerInterval: number;
+let highScore = Number(localStorage.getItem("typingHighScore"))
 
 const tickSound = new Audio("sounds/tick.wav");
 const gameOverSound = new Audio("sounds/gameover.mp3");
@@ -41,14 +43,6 @@ function shuffleWords(words: string[]): string[] {
   }
   return array;
 }
-
-// function getRandomWord(): string {
-//   if (wordIndex >= shuffledWords.length) {
-//     shuffledWords = shuffleWords(wordList);
-//     wordIndex = 0;
-//   }
-//   return shuffledWords[wordIndex++];
-// }
 
 function getRandomWord(): string {
   if (wordList.length === 0) return "";
@@ -89,6 +83,14 @@ function updateScore() {
   scoreDisplay.textContent = score.toString();
 }
 
+function updateHighScore() {
+  if (score > highScore) {
+    highScore = score;
+    localStorage.setItem("typingHighScore", highScore.toString());
+  }
+  highScoreDisplay.textContent = highScore.toString();
+}
+
 function endGame() {
   if (timerInterval) clearInterval(timerInterval);
   tickSound.pause();
@@ -99,6 +101,8 @@ function endGame() {
   typedInput.disabled = true;
   restartBtn.style.display = "inline-block";
   startBtn.style.display = "none";
+
+  updateHighScore();
 }
 
 function playTick() {
