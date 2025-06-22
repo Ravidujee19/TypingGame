@@ -6,6 +6,7 @@ const restartBtn = document.getElementById("restart-btn") as HTMLButtonElement;
 const startBtn = document.getElementById("start-btn") as HTMLButtonElement;
 const difficultySelect = document.getElementById("difficulty") as HTMLSelectElement;
 const highScoreDisplay = document.getElementById("high-score") as HTMLSpanElement;
+const difficultyLabel = document.getElementById("difficulty-label") as HTMLSpanElement;
 
 let wordList: string[] = [];
 let shuffledWords: string[] = [];
@@ -14,7 +15,11 @@ let currentWord = '';
 let score = 0;
 let time = 10;
 let timerInterval: number;
-let highScore = Number(localStorage.getItem("typingHighScore"))
+let highScores: Record<string, number> = {
+  easy: Number(localStorage.getItem("typingHighScore_easy")) || 0,
+  medium: Number(localStorage.getItem("typingHighScore_medium")) || 0,
+  hard: Number(localStorage.getItem("typingHighScore_hard")) || 0,
+};
 
 const tickSound = new Audio("sounds/tick.wav");
 const gameOverSound = new Audio("sounds/gameover.mp3");
@@ -84,11 +89,18 @@ function updateScore() {
 }
 
 function updateHighScore() {
-  if (score > highScore) {
-    highScore = score;
-    localStorage.setItem("typingHighScore", highScore.toString());
+  const difficulty = difficultySelect.value;
+  if (score > highScores[difficulty]) {
+    highScores[difficulty] = score;
+    localStorage.setItem(`typingHighScore_${difficulty}`, score.toString());
   }
-  highScoreDisplay.textContent = highScore.toString();
+  updateHighScoreDisplay();
+}
+
+function updateHighScoreDisplay() {
+  const difficulty = difficultySelect.value;
+  highScoreDisplay.textContent = highScores[difficulty].toString();
+  difficultyLabel.textContent = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
 }
 
 function endGame() {
@@ -155,6 +167,7 @@ wordDisplay.style.display = "none";
 
 difficultySelect.addEventListener("change", () => {
   startBtn.disabled = false;
+  updateHighScoreDisplay();
 });
 
 startBtn.addEventListener("click", () => {
@@ -167,4 +180,5 @@ restartBtn.addEventListener("click", () => {
 
 window.addEventListener("load", () => {
   loadWords();
+  updateHighScoreDisplay();
 });
